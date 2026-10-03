@@ -2,7 +2,7 @@
 
 This puts **Forkcast** in the iPhone Share menu. In Safari (or any app) on a recipe page, tap Share > Send to Forkcast, and the recipe lands in your recipe book.
 
-You need first: Forkcast running at `https://forkcast.suenderstyle.com`, and the `FORKCAST_SHARE_TOKEN` value from the server's `.env` file (see DEPLOY.md). Also the Cloudflare bypass for `/api/share` (DEPLOY.md, step 6).
+You need first: Forkcast running at `https://forkcast.example.com`, and the `FORKCAST_SHARE_TOKEN` value from the server's `.env` file (see DEPLOY.md). Also the Cloudflare bypass for `/api/share` (DEPLOY.md, step 6).
 
 ## Build it
 1. Open the **Shortcuts** app > tap **+** (top right).
@@ -10,7 +10,7 @@ You need first: Forkcast running at `https://forkcast.suenderstyle.com`, and the
 3. Tap the **(i)** / settings button at the bottom and turn on **Show in Share Sheet**. Under "Share Sheet Types" leave only **URLs** (and **Safari web pages**) ticked.
 4. Tap **Add Action**, search **Get Contents of URL**, add it. (The shortcut's "Shortcut Input" is the URL being shared. Shortcuts fills this in for you as the first step "Receive URLs input from Share Sheet".)
 5. In the **Get Contents of URL** action:
-   - **URL**: type `https://forkcast.suenderstyle.com/api/share`
+   - **URL**: type `https://forkcast.example.com/api/share`
    - Tap the **>** arrow to expand. **Method**: change GET to **POST**.
    - **Headers** > **Add new header**: Key `X-Share-Token`, Text = your token.
    - **Request Body**: **JSON**. Tap **Add new field** > **Text**: Key `url`, Value = tap the field and choose the variable **Shortcut Input**.

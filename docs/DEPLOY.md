@@ -5,7 +5,7 @@ Forkcast is one Docker container. It stores everything in one folder (`data/`): 
 ## 0. What you need
 - A Proxmox host with a Linux VM or LXC (Debian 12 or Ubuntu 24.04 is fine), amd64.
 - Docker + the Compose plugin on that VM/LXC. (LXC: enable "Nesting" and "keyctl" under Options > Features.)
-- A Cloudflare account with `suenderstyle.com` on it.
+- A Cloudflare account with `example.com` on it.
 
 ## 1. Install Docker (on the VM/LXC)
 ```bash
@@ -15,10 +15,11 @@ docker compose version             # should print a version
 ```
 
 ## 2. Get the files onto the server
-Copy the whole `forkcast` folder (the one with `Dockerfile`, `backend/`, `frontend/`) to the server, e.g. to `/opt/forkcast`:
 ```bash
-rsync -av --exclude backend/.venv --exclude data ./forkcast/ user@SERVER:/opt/forkcast/
+sudo git clone https://github.com/JoshDarnIt-All/Forkcast.git /opt/forkcast
+sudo chown -R $USER /opt/forkcast
 ```
+To update later: `cd /opt/forkcast && git pull && docker compose up -d --build` (your `data/` folder is untouched).
 
 ## 3. Configure
 ```bash
@@ -52,20 +53,20 @@ scp forkcast.tar user@SERVER:/opt/forkcast/ && ssh user@SERVER "docker load -i /
 ## 5. Cloudflare Tunnel (no ports opened on your router)
 1. Cloudflare dashboard > **Zero Trust** > **Networks** > **Tunnels** > **Create a tunnel** > Cloudflared.
 2. Name it `forkcast`. Copy the install command it shows and run it on the server (installs `cloudflared`).
-3. **Public hostname**: subdomain `forkcast`, domain `suenderstyle.com`, service type `HTTP`, URL `localhost:8000` (or `forkcast:8000` if cloudflared runs in the same compose network).
-4. Save. `https://forkcast.suenderstyle.com` now reaches the app.
+3. **Public hostname**: subdomain `forkcast`, domain `example.com`, service type `HTTP`, URL `localhost:8000` (or `forkcast:8000` if cloudflared runs in the same compose network).
+4. Save. `https://forkcast.example.com` now reaches the app.
 
 ## 6. Cloudflare Access (login in front of the app)
 Forkcast has no passwords of its own, so **do this before sharing the link**.
 1. Zero Trust > **Access** > **Applications** > **Add an application** > Self-hosted.
-2. Application domain: `forkcast.suenderstyle.com`. Session duration: 1 month (so nobody is nagged).
+2. Application domain: `forkcast.example.com`. Session duration: 1 month (so nobody is nagged).
 3. Add a policy: Action **Allow**, Include **Emails** = your email and your wife's. Save.
 
 ### Let the iPhone Shortcut through (`/api/share`)
 The Shortcut cannot log in through a web page, so give that one path its own rule. `/api/share` is still protected by the secret `X-Share-Token` from your `.env`.
 
 **Option A (simplest): bypass for that path only**
-1. Access > Applications > Add application > Self-hosted, domain `forkcast.suenderstyle.com`, **path** `api/share`.
+1. Access > Applications > Add application > Self-hosted, domain `forkcast.example.com`, **path** `api/share`.
 2. Policy: Action **Bypass**, Include **Everyone**. Save.
 (More specific paths win, so the main app stays protected.)
 
