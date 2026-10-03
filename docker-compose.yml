@@ -1,0 +1,17 @@
+services:
+  forkcast:
+    build: .
+    image: forkcast:latest
+    container_name: forkcast
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/data            # database + recipe photos live here; back this folder up
+    environment:
+      FORKCAST_SHARE_TOKEN: "${FORKCAST_SHARE_TOKEN:-}"   # set in .env; needed for the iPhone Shortcut
+      FORKCAST_AI_ENABLED: "${FORKCAST_AI_ENABLED:-false}"
+      # Only used when AI is enabled:
+      # FORKCAST_AI_BASE_URL: "http://host.docker.internal:11434/v1"
+      # FORKCAST_AI_MODEL: "llama3.1"
+      # FORKCAST_AI_KEY: ""

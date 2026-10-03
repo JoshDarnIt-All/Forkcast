@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Forkcast</title>
+<meta name="theme-color" content="#fbf5ea" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1511" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Forkcast">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/png" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="stylesheet" href="/css/app.css">
+<script>try{var t=localStorage.getItem('fc_theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body>
+<div id="app">
+  <nav class="nav" id="nav" aria-label="Main"></nav>
+  <main id="view" aria-live="polite"></main>
+</div>
+<div id="toasts" aria-live="polite"></div>
+<noscript>Forkcast needs JavaScript. Sorry!</noscript>
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>

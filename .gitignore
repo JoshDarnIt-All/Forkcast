@@ -1,0 +1,11 @@
+# local data (recipes, DB, images) — never commit
+data/*
+!data/.gitkeep
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+# misc
+.DS_Store
+.env
