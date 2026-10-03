@@ -4,3 +4,4 @@ recipe-scrapers==15.12.0
 httpx==0.28.1
 beautifulsoup4==4.15.0
 pytest==9.1.1
+curl_cffi==0.16.3

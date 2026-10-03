@@ -155,13 +155,23 @@ def finalize(d: dict, url=None) -> dict:
 
 
 # ------------------------------------------------------------------ fetching
+def _http_get(url: str, timeout: int, extra_headers: dict = None):
+    """GET that looks like a real Chrome browser (many recipe sites block plain scripts); falls back to httpx."""
+    try:
+        from curl_cffi import requests as cr
+        return cr.get(url, impersonate="chrome", timeout=timeout, headers=extra_headers or None, allow_redirects=True)
+    except Exception:
+        pass
+    headers = {"User-Agent": UA, "Accept": "text/html,application/xhtml+xml,*/*;q=0.8", "Accept-Language": "en-US,en;q=0.9"}
+    headers.update(extra_headers or {})
+    with httpx.Client(follow_redirects=True, timeout=timeout, headers=headers) as c:
+        return c.get(url)
+
+
 def fetch_html(url: str) -> str:
     try:
-        with httpx.Client(follow_redirects=True, timeout=20, headers={
-                "User-Agent": UA, "Accept": "text/html,application/xhtml+xml,*/*;q=0.8",
-                "Accept-Language": "en-US,en;q=0.9"}) as c:
-            r = c.get(url)
-    except httpx.HTTPError as e:
+        r = _http_get(url, 25)
+    except Exception as e:
         raise ApiError(502, f"Couldn't reach that site ({type(e).__name__}). Check the link, or paste the recipe text instead.", "fetch_failed")
     if r.status_code in (401, 403, 405, 429, 503):
         raise ApiError(502, f"That site blocks automatic downloads (HTTP {r.status_code}). Open the recipe in your browser, "
@@ -305,8 +315,7 @@ def download_image(src: str, base_url: str = None):
     if not src:
         return None
     try:
-        with httpx.Client(follow_redirects=True, timeout=15, headers={"User-Agent": UA, "Referer": base_url or ""}) as c:
-            r = c.get(src)
+        r = _http_get(src, 15, {"Referer": base_url} if base_url else None)
         ct = r.headers.get("content-type", "")
         if r.status_code != 200 or not ct.startswith("image/") or len(r.content) > 10_000_000 or len(r.content) < 500:
             return None
